@@ -20,6 +20,7 @@ const MAX_DT = 0.05;           // s
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
+const overlay = document.getElementById('overlay');
 
 const state = {
   phase: 'ready',   // 'ready' | 'playing' | 'won' | 'lost'
@@ -73,11 +74,37 @@ window.addEventListener('keydown', (e) => {
   onKey(e, true);
   if (e.code === 'Space') {
     e.preventDefault();
-    launchBall();
+    if (!e.repeat) launchOrRestart();
   }
 });
 window.addEventListener('keyup', (e) => onKey(e, false));
-canvas.addEventListener('mousedown', launchBall);
+canvas.addEventListener('mousedown', launchOrRestart);
+overlay.addEventListener('click', launchOrRestart);
+
+function launchOrRestart() {
+  if (state.phase === 'won' || state.phase === 'lost') resetGame();
+  else launchBall();
+}
+
+function resetGame() {
+  state.score = 0;
+  state.lives = START_LIVES;
+  state.phase = 'ready';
+  initBlocks();
+  setPaddleX((CANVAS_W - PADDLE_W) / 2);
+  state.ball.vx = 0;
+  state.ball.vy = 0;
+  state.ball.attached = true;
+  attachBall();
+  overlay.hidden = true;
+}
+
+function endGame(phase, message) {
+  state.phase = phase;
+  overlay.innerHTML = '<h1>' + message + '</h1><p>Puntos: ' + state.score +
+    '</p><p>Haz clic o pulsa Espacio para jugar de nuevo</p>';
+  overlay.hidden = false;
+}
 
 const LAUNCH_ANGLE = 15; // grados respecto a la vertical
 
@@ -117,12 +144,17 @@ function updateBall(dt) {
   bouncePaddle();
   bounceBlocks();
 
-  if (ball.y > CANVAS_H) loseLife();
+  if (!state.blocks.some((b) => b.alive)) endGame('won', '¡Victoria!');
+  else if (ball.y > CANVAS_H) loseLife();
 }
 
 function loseLife() {
   const ball = state.ball;
   state.lives--;
+  if (state.lives <= 0) {
+    endGame('lost', 'Game over');
+    return;
+  }
   state.phase = 'ready';
   ball.attached = true;
   ball.vx = 0;
@@ -179,6 +211,7 @@ function update(dt) {
   const dir = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
   if (dir !== 0) setPaddleX(state.paddle.x + dir * PADDLE_KEY_SPEED * dt);
 
+  if (state.phase === 'won' || state.phase === 'lost') return;
   if (state.ball.attached) attachBall();
   else updateBall(dt);
 }
