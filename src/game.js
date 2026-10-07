@@ -116,6 +116,18 @@ function updateBall(dt) {
 
   bouncePaddle();
   bounceBlocks();
+
+  if (ball.y > CANVAS_H) loseLife();
+}
+
+function loseLife() {
+  const ball = state.ball;
+  state.lives--;
+  state.phase = 'ready';
+  ball.attached = true;
+  ball.vx = 0;
+  ball.vy = 0;
+  attachBall();
 }
 
 // Procesa como máximo un bloque por fotograma y rebota en el eje de menor solapamiento.
@@ -177,6 +189,14 @@ function draw() {
   drawSprite(ctx, 'paddle', p.x, p.y, p.w, p.h);
   const ball = state.ball;
   drawSprite(ctx, 'ball', ball.x, ball.y, ball.size, ball.size);
+
+  ctx.fillStyle = '#fff';
+  ctx.font = '20px sans-serif';
+  ctx.textBaseline = 'top';
+  ctx.textAlign = 'left';
+  ctx.fillText('Puntos: ' + state.score, 16, 16);
+  ctx.textAlign = 'right';
+  ctx.fillText('Vidas: ' + state.lives, CANVAS_W - 16, 16);
   for (const b of state.blocks) {
     if (b.alive) drawSprite(ctx, 'block_' + b.color, b.x, b.y, b.w, b.h);
   }
