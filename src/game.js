@@ -48,12 +48,39 @@ function initBlocks() {
   }
 }
 
+const keys = { left: false, right: false };
+
+function setPaddleX(x) {
+  state.paddle.x = Math.max(0, Math.min(CANVAS_W - state.paddle.w, x));
+}
+
+window.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  setPaddleX(e.clientX - rect.left - state.paddle.w / 2);
+});
+
+function onKey(e, pressed) {
+  if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+    keys.left = pressed;
+    e.preventDefault();
+  } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+    keys.right = pressed;
+    e.preventDefault();
+  }
+}
+
+window.addEventListener('keydown', (e) => onKey(e, true));
+window.addEventListener('keyup', (e) => onKey(e, false));
+
 function update(dt) {
-  // Se rellenará en los pasos siguientes.
+  const dir = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
+  if (dir !== 0) setPaddleX(state.paddle.x + dir * PADDLE_KEY_SPEED * dt);
 }
 
 function draw() {
   ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+  const p = state.paddle;
+  drawSprite(ctx, 'paddle', p.x, p.y, p.w, p.h);
   for (const b of state.blocks) {
     if (b.alive) drawSprite(ctx, 'block_' + b.color, b.x, b.y, b.w, b.h);
   }
@@ -71,6 +98,7 @@ function loop(time) {
 
 loadSpritesheet(() => {
   initBlocks();
+  setPaddleX((CANVAS_W - PADDLE_W) / 2);
   requestAnimationFrame((time) => {
     lastTime = time;
     loop(time);
