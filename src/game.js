@@ -115,6 +115,35 @@ function updateBall(dt) {
   }
 
   bouncePaddle();
+  bounceBlocks();
+}
+
+// Procesa como máximo un bloque por fotograma y rebota en el eje de menor solapamiento.
+function bounceBlocks() {
+  const ball = state.ball;
+  for (const b of state.blocks) {
+    if (!b.alive) continue;
+    const overlapX = Math.min(ball.x + ball.size, b.x + b.w) - Math.max(ball.x, b.x);
+    const overlapY = Math.min(ball.y + ball.size, b.y + b.h) - Math.max(ball.y, b.y);
+    if (overlapX <= 0 || overlapY <= 0) continue;
+
+    if (overlapX < overlapY) {
+      const fromLeft = ball.x + ball.size / 2 < b.x + b.w / 2;
+      ball.x += fromLeft ? -overlapX : overlapX;
+      ball.vx = fromLeft ? -Math.abs(ball.vx) : Math.abs(ball.vx);
+    } else {
+      const fromTop = ball.y + ball.size / 2 < b.y + b.h / 2;
+      ball.y += fromTop ? -overlapY : overlapY;
+      ball.vy = fromTop ? -Math.abs(ball.vy) : Math.abs(ball.vy);
+    }
+
+    b.hits--;
+    if (b.hits <= 0) {
+      b.alive = false;
+      state.score += POINTS_PER_BLOCK;
+    }
+    return;
+  }
 }
 
 function bouncePaddle() {
