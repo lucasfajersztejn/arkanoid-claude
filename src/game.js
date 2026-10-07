@@ -69,18 +69,66 @@ function onKey(e, pressed) {
   }
 }
 
-window.addEventListener('keydown', (e) => onKey(e, true));
+window.addEventListener('keydown', (e) => {
+  onKey(e, true);
+  if (e.code === 'Space') {
+    e.preventDefault();
+    launchBall();
+  }
+});
 window.addEventListener('keyup', (e) => onKey(e, false));
+canvas.addEventListener('mousedown', launchBall);
+
+const LAUNCH_ANGLE = 15; // grados respecto a la vertical
+
+function launchBall() {
+  const ball = state.ball;
+  if (state.phase !== 'ready' || !ball.attached) return;
+  const angle = (Math.random() < 0.5 ? -1 : 1) * LAUNCH_ANGLE * Math.PI / 180;
+  ball.vx = BALL_SPEED * Math.sin(angle);
+  ball.vy = -BALL_SPEED * Math.cos(angle);
+  ball.attached = false;
+  state.phase = 'playing';
+}
+
+function attachBall() {
+  const { paddle, ball } = state;
+  ball.x = paddle.x + (paddle.w - ball.size) / 2;
+  ball.y = paddle.y - ball.size;
+}
+
+function updateBall(dt) {
+  const ball = state.ball;
+  ball.x += ball.vx * dt;
+  ball.y += ball.vy * dt;
+
+  if (ball.x < 0) {
+    ball.x = 0;
+    ball.vx = Math.abs(ball.vx);
+  } else if (ball.x + ball.size > CANVAS_W) {
+    ball.x = CANVAS_W - ball.size;
+    ball.vx = -Math.abs(ball.vx);
+  }
+  if (ball.y < 0) {
+    ball.y = 0;
+    ball.vy = Math.abs(ball.vy);
+  }
+}
 
 function update(dt) {
   const dir = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
   if (dir !== 0) setPaddleX(state.paddle.x + dir * PADDLE_KEY_SPEED * dt);
+
+  if (state.ball.attached) attachBall();
+  else updateBall(dt);
 }
 
 function draw() {
   ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
   const p = state.paddle;
   drawSprite(ctx, 'paddle', p.x, p.y, p.w, p.h);
+  const ball = state.ball;
+  drawSprite(ctx, 'ball', ball.x, ball.y, ball.size, ball.size);
   for (const b of state.blocks) {
     if (b.alive) drawSprite(ctx, 'block_' + b.color, b.x, b.y, b.w, b.h);
   }
