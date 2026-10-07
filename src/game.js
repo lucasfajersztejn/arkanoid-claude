@@ -228,8 +228,9 @@ function draw() {
   ctx.textBaseline = 'top';
   ctx.textAlign = 'left';
   ctx.fillText('Puntos: ' + state.score, 16, 16);
-  ctx.textAlign = 'right';
-  ctx.fillText('Vidas: ' + state.lives, CANVAS_W - 16, 16);
+  for (let i = 0; i < state.lives; i++) {
+    drawSprite(ctx, 'ball', CANVAS_W - 16 - (i + 1) * BALL_SIZE - i * 8, 20, BALL_SIZE, BALL_SIZE);
+  }
   for (const b of state.blocks) {
     if (b.alive) drawSprite(ctx, 'block_' + b.color, b.x, b.y, b.w, b.h);
   }
