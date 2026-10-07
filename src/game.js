@@ -113,6 +113,25 @@ function updateBall(dt) {
     ball.y = 0;
     ball.vy = Math.abs(ball.vy);
   }
+
+  bouncePaddle();
+}
+
+function bouncePaddle() {
+  const { ball, paddle } = state;
+  if (ball.vy <= 0) return;
+  const overlaps =
+    ball.x + ball.size > paddle.x && ball.x < paddle.x + paddle.w &&
+    ball.y + ball.size > paddle.y && ball.y < paddle.y + paddle.h;
+  if (!overlaps) return;
+
+  const ballCenter = ball.x + ball.size / 2;
+  const offset = (ballCenter - (paddle.x + paddle.w / 2)) / (paddle.w / 2);
+  const clamped = Math.max(-1, Math.min(1, offset));
+  const angle = clamped * MAX_BOUNCE_ANGLE * Math.PI / 180;
+  ball.vx = BALL_SPEED * Math.sin(angle);
+  ball.vy = -BALL_SPEED * Math.cos(angle);
+  ball.y = paddle.y - ball.size;
 }
 
 function update(dt) {
