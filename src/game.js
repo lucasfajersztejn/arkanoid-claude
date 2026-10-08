@@ -211,9 +211,17 @@ function bouncePaddle() {
   ball.y = paddle.y - ball.size;
 }
 
+function updateExplosions(dt) {
+  const duration = EXPLOSION_DURATION / 1000;
+  for (const e of state.explosions) e.elapsed += dt;
+  state.explosions = state.explosions.filter((e) => e.elapsed < duration);
+}
+
 function update(dt) {
   const dir = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
   if (dir !== 0) setPaddleX(state.paddle.x + dir * PADDLE_KEY_SPEED * dt);
+
+  updateExplosions(dt);
 
   if (state.phase === 'won' || state.phase === 'lost') return;
   if (state.ball.attached) attachBall();
@@ -237,6 +245,11 @@ function draw() {
   }
   for (const b of state.blocks) {
     if (b.alive) drawSprite(ctx, 'block_' + b.color, b.x, b.y, b.w, b.h);
+  }
+  const duration = EXPLOSION_DURATION / 1000;
+  for (const e of state.explosions) {
+    const i = Math.min(EXPLOSION_FRAME_COUNT - 1, Math.floor(e.elapsed / duration * EXPLOSION_FRAME_COUNT));
+    drawFrame(ctx, EXPLOSION_FRAMES[e.color][i], e.x, e.y, e.w, e.h);
   }
 }
 
