@@ -201,6 +201,7 @@ function bounceBlocks() {
     if (b.hits <= 0) {
       b.alive = false;
       state.score += POINTS_PER_BLOCK;
+      playSound('break');
       state.explosions.push({ x: b.x, y: b.y, w: b.w, h: b.h, color: b.color, elapsed: 0 });
     }
     return;
