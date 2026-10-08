@@ -35,6 +35,26 @@ body {
   cursor: pointer;
 }
 
+#overlay .levels {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+#overlay button {
+  padding: 12px 24px;
+  font: 20px sans-serif;
+  color: #fff;
+  background: #444;
+  border: 2px solid #888;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#overlay button:hover {
+  background: #666;
+}
+
 #overlay[hidden] {
   display: none;
 }

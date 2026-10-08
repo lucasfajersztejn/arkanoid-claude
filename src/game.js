@@ -31,7 +31,7 @@ const ctx = canvas.getContext('2d');
 const overlay = document.getElementById('overlay');
 
 const state = {
-  phase: 'ready',   // 'ready' | 'playing' | 'won' | 'lost'
+  phase: 'menu',    // 'menu' | 'ready' | 'playing' | 'won' | 'lost'
   score: 0,
   lives: START_LIVES,
   level: 0,         // índice en LEVELS (0 = nivel 1)
@@ -91,18 +91,30 @@ window.addEventListener('keydown', (e) => {
 });
 window.addEventListener('keyup', (e) => onKey(e, false));
 canvas.addEventListener('mousedown', launchOrRestart);
-overlay.addEventListener('click', launchOrRestart);
+overlay.addEventListener('click', (e) => {
+  const button = e.target.closest('button[data-level]');
+  if (button) startGame(Number(button.dataset.level));
+  else launchOrRestart();
+});
 
 function launchOrRestart() {
-  if (state.phase === 'won' || state.phase === 'lost') resetGame();
+  if (state.phase === 'won' || state.phase === 'lost') showMenu();
   else launchBall();
 }
 
-function resetGame() {
+function showMenu() {
+  state.phase = 'menu';
+  const buttons = LEVELS.map((_, i) =>
+    '<button data-level="' + i + '">Nivel ' + (i + 1) + '</button>').join('');
+  overlay.innerHTML = '<h1>Arkanoid</h1><p>Elige un nivel</p><div class="levels">' + buttons + '</div>';
+  overlay.hidden = false;
+}
+
+function startGame(levelIndex) {
   state.score = 0;
   state.lives = START_LIVES;
   state.phase = 'ready';
-  state.level = 0;
+  state.level = levelIndex;
   initBlocks();
   state.explosions = [];
   setPaddleX((CANVAS_W - PADDLE_W) / 2);
@@ -128,7 +140,7 @@ function loadLevel(index) {
 function endGame(phase, message) {
   state.phase = phase;
   overlay.innerHTML = '<h1>' + message + '</h1><p>Puntos: ' + state.score +
-    '</p><p>Haz clic o pulsa Espacio para jugar de nuevo</p>';
+    '</p><p>Haz clic o pulsa Espacio para volver al menú</p>';
   overlay.hidden = false;
 }
 
@@ -253,7 +265,7 @@ function update(dt) {
 
   updateExplosions(dt);
 
-  if (state.phase === 'won' || state.phase === 'lost') return;
+  if (state.phase === 'menu' || state.phase === 'won' || state.phase === 'lost') return;
   if (state.ball.attached) attachBall();
   else updateBall(dt);
 }
@@ -299,6 +311,8 @@ function loop(time) {
 loadSpritesheet(() => {
   initBlocks();
   setPaddleX((CANVAS_W - PADDLE_W) / 2);
+  attachBall();
+  showMenu();
   requestAnimationFrame((time) => {
     lastTime = time;
     loop(time);
