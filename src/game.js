@@ -16,6 +16,16 @@ const POINTS_PER_BLOCK = 10;
 const MAX_DT = 0.05;           // s
 const EXPLOSION_FRAME_COUNT = 4; // fotogramas por color en EXPLOSION_FRAMES
 
+const SOUND_FILES = {
+  bounce: 'assets/sounds/ball-bounce.mp3',
+  break: 'assets/sounds/break-sound.mp3',
+};
+
+// Cada evento reproduce su propia copia para que los sonidos se solapen.
+function playSound(name) {
+  new Audio(SOUND_FILES[name]).play().catch(() => {});
+}
+
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 const overlay = document.getElementById('overlay');
@@ -135,13 +145,16 @@ function updateBall(dt) {
   if (ball.x < 0) {
     ball.x = 0;
     ball.vx = Math.abs(ball.vx);
+    playSound('bounce');
   } else if (ball.x + ball.size > CANVAS_W) {
     ball.x = CANVAS_W - ball.size;
     ball.vx = -Math.abs(ball.vx);
+    playSound('bounce');
   }
   if (ball.y < 0) {
     ball.y = 0;
     ball.vy = Math.abs(ball.vy);
+    playSound('bounce');
   }
 
   bouncePaddle();
@@ -209,6 +222,7 @@ function bouncePaddle() {
   ball.vx = BALL_SPEED * Math.sin(angle);
   ball.vy = -BALL_SPEED * Math.cos(angle);
   ball.y = paddle.y - ball.size;
+  playSound('bounce');
 }
 
 function updateExplosions(dt) {
