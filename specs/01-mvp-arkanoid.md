@@ -99,22 +99,22 @@ Convenciones:
 
 ## Criterios de aceptación
 
-- [ ] Abrir `index.html` (con `file://` o con servidor estático) carga el juego sin errores en la consola.
-- [ ] El canvas mide exactamente 800×600 px.
-- [ ] Al empezar hay 60 bloques en 10 columnas × 6 filas; la fila superior es gris y las siguientes son red, yellow, cyan, magenta y green.
-- [ ] La pala se mueve con el ratón y con ← → / A D, y nunca sale del canvas.
-- [ ] La pelota empieza pegada a la pala y solo se lanza con clic o Espacio.
-- [ ] La pelota rebota en las paredes laterales y en el techo.
-- [ ] Golpear la pala en el centro envía la pelota en vertical y golpear en un extremo la envía con un ángulo de unos 60° respecto a la vertical.
-- [ ] La velocidad de la pelota no cambia durante la partida.
-- [ ] Un bloque de color se destruye al primer golpe y un bloque gris al segundo.
-- [ ] Destruir un bloque suma exactamente 10 puntos; el primer golpe a un bloque gris no suma.
-- [ ] Al destruir un bloque este desaparece al instante.
-- [ ] Se empieza con 3 vidas; dejar caer la pelota resta 1 y la devuelve pegada a la pala.
-- [ ] Al llegar a 0 vidas aparece el overlay de game over.
-- [ ] Al destruir los 60 bloques aparece el overlay de victoria.
-- [ ] Hacer clic o pulsar Espacio en un overlay reinicia la partida con 3 vidas, 0 puntos y los 60 bloques.
-- [ ] El marcador de puntos y el de vidas son visibles durante la partida y se actualizan.
+- [x ] Abrir `index.html` (con `file://` o con servidor estático) carga el juego sin errores en la consola.
+- [x ] El canvas mide exactamente 800×600 px.
+- [x ] Al empezar hay 60 bloques en 10 columnas × 6 filas; la fila superior es gris y las siguientes son red, yellow, cyan, magenta y green.
+- [x ] La pala se mueve con el ratón y con ← → / A D, y nunca sale del canvas.
+- [x ] La pelota empieza pegada a la pala y solo se lanza con clic o Espacio.
+- [x ] La pelota rebota en las paredes laterales y en el techo.
+- [x ] Golpear la pala en el centro envía la pelota en vertical y golpear en un extremo la envía con un ángulo de unos 60° respecto a la vertical.
+- [x ] La velocidad de la pelota no cambia durante la partida.
+- [x ] Un bloque de color se destruye al primer golpe y un bloque gris al segundo.
+- [x ] Destruir un bloque suma exactamente 10 puntos; el primer golpe a un bloque gris no suma.
+- [x ] Al destruir un bloque este desaparece al instante.
+- [x ] Se empieza con 3 vidas; dejar caer la pelota resta 1 y la devuelve pegada a la pala.
+- [x ] Al llegar a 0 vidas aparece el overlay de game over.
+- [x ] Al destruir los 60 bloques aparece el overlay de victoria.
+- [x ] Hacer clic o pulsar Espacio en un overlay reinicia la partida con 3 vidas, 0 puntos y los 60 bloques.
+- [x ] El marcador de puntos y el de vidas son visibles durante la partida y se actualizan.
 
 ---
 

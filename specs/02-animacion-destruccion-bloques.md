@@ -66,18 +66,18 @@ Convenciones:
 
 ## Criterios de aceptación
 
-- [ ] Abrir `index.html` carga el juego sin errores en la consola.
-- [ ] Al destruir un bloque de color se muestra su animación de 4 fotogramas en la posición exacta del bloque.
-- [ ] Un bloque gris no muestra ningún efecto al primer golpe y explota al segundo.
-- [ ] Los fotogramas mostrados proceden de `assets/spritesheet-breakout.png` (la pestaña Red no muestra otras imágenes cargadas).
-- [ ] La animación dura 150 ms en total y después el hueco queda vacío.
-- [ ] `state.explosions` queda vacío tras 150 ms sin nuevas roturas.
-- [ ] La pelota atraviesa el hueco de un bloque que está explotando sin rebotar.
-- [ ] Destruir un bloque sigue sumando exactamente 10 puntos, en el momento del golpe.
-- [ ] Al destruir el último bloque el overlay de victoria aparece sin esperar a la animación y la explosión termina de reproducirse.
-- [ ] Varios bloques rotos en fotogramas consecutivos se animan a la vez sin interferir.
-- [ ] Reiniciar la partida con una explosión en curso la descarta: `state.explosions` queda vacío.
-- [ ] `git diff` no muestra cambios en `assets/`.
+- [x ] Abrir `index.html` carga el juego sin errores en la consola.
+- [x ] Al destruir un bloque de color se muestra su animación de 4 fotogramas en la posición exacta del bloque.
+- [x ] Un bloque gris no muestra ningún efecto al primer golpe y explota al segundo.
+- [x ] Los fotogramas mostrados proceden de `assets/spritesheet-breakout.png` (la pestaña Red no muestra otras imágenes cargadas).
+- [x ] La animación dura 150 ms en total y después el hueco queda vacío.
+- [x ] `state.explosions` queda vacío tras 150 ms sin nuevas roturas.
+- [x ] La pelota atraviesa el hueco de un bloque que está explotando sin rebotar.
+- [x ] Destruir un bloque sigue sumando exactamente 10 puntos, en el momento del golpe.
+- [x ] Al destruir el último bloque el overlay de victoria aparece sin esperar a la animación y la explosión termina de reproducirse.
+- [x ] Varios bloques rotos en fotogramas consecutivos se animan a la vez sin interferir.
+- [x ] Reiniciar la partida con una explosión en curso la descarta: `state.explosions` queda vacío.
+- [x ] `git diff` no muestra cambios en `assets/`.
 
 ---
 
