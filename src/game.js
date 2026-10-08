@@ -23,6 +23,7 @@ const SOUND_FILES = {
 
 // Cada evento reproduce su propia copia para que los sonidos se solapen.
 function playSound(name) {
+  if (state.muted) return;
   new Audio(SOUND_FILES[name]).play().catch(() => {});
 }
 
@@ -35,6 +36,7 @@ const state = {
   score: 0,
   lives: START_LIVES,
   level: 0,         // índice en LEVELS (0 = nivel 1)
+  muted: false,     // true = playSound no reproduce nada
   paddle: { x: 0, y: PADDLE_Y, w: PADDLE_W, h: PADDLE_H },
   ball: { x: 0, y: 0, vx: 0, vy: 0, size: BALL_SIZE, attached: true },
   blocks: [],       // { x, y, w, h, color, hits, alive }
@@ -82,8 +84,22 @@ function onKey(e, pressed) {
   }
 }
 
+const muteButton = document.getElementById('mute');
+
+function toggleMute() {
+  state.muted = !state.muted;
+  muteButton.textContent = state.muted ? '🔇' : '🔊';
+  muteButton.setAttribute('aria-label', state.muted ? 'Activar sonido' : 'Silenciar sonido');
+}
+
+muteButton.addEventListener('click', () => {
+  toggleMute();
+  muteButton.blur();
+});
+
 window.addEventListener('keydown', (e) => {
   onKey(e, true);
+  if (e.code === 'KeyM' && !e.repeat) toggleMute();
   if (e.code === 'Space') {
     e.preventDefault();
     if (!e.repeat) launchOrRestart();
