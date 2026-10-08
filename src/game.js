@@ -270,6 +270,9 @@ function draw() {
   ctx.textBaseline = 'top';
   ctx.textAlign = 'left';
   ctx.fillText('Puntos: ' + state.score, 16, 16);
+  ctx.textAlign = 'center';
+  ctx.fillText('Nivel ' + (state.level + 1) + '/' + LEVELS.length, CANVAS_W / 2, 16);
+  ctx.textAlign = 'left';
   for (let i = 0; i < state.lives; i++) {
     drawSprite(ctx, 'ball', CANVAS_W - 16 - (i + 1) * BALL_SIZE - i * 8, 20, BALL_SIZE, BALL_SIZE);
   }
