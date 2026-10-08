@@ -17,6 +17,7 @@ const START_LIVES = 3;
 const POINTS_PER_BLOCK = 10;
 const ROW_COLORS = ['gray', 'red', 'yellow', 'cyan', 'magenta', 'green'];
 const MAX_DT = 0.05;           // s
+const EXPLOSION_FRAME_COUNT = 4; // fotogramas por color en EXPLOSION_FRAMES
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -29,6 +30,7 @@ const state = {
   paddle: { x: 0, y: PADDLE_Y, w: PADDLE_W, h: PADDLE_H },
   ball: { x: 0, y: 0, vx: 0, vy: 0, size: BALL_SIZE, attached: true },
   blocks: [],       // { x, y, w, h, color, hits, alive }
+  explosions: [],   // { x, y, w, h, color, elapsed }
 };
 
 function initBlocks() {
@@ -91,6 +93,7 @@ function resetGame() {
   state.lives = START_LIVES;
   state.phase = 'ready';
   initBlocks();
+  state.explosions = [];
   setPaddleX((CANVAS_W - PADDLE_W) / 2);
   state.ball.vx = 0;
   state.ball.vy = 0;
@@ -185,6 +188,7 @@ function bounceBlocks() {
     if (b.hits <= 0) {
       b.alive = false;
       state.score += POINTS_PER_BLOCK;
+      state.explosions.push({ x: b.x, y: b.y, w: b.w, h: b.h, color: b.color, elapsed: 0 });
     }
     return;
   }
