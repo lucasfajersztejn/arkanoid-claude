@@ -102,6 +102,7 @@ function resetGame() {
   state.score = 0;
   state.lives = START_LIVES;
   state.phase = 'ready';
+  state.level = 0;
   initBlocks();
   state.explosions = [];
   setPaddleX((CANVAS_W - PADDLE_W) / 2);
@@ -110,6 +111,18 @@ function resetGame() {
   state.ball.attached = true;
   attachBall();
   overlay.hidden = true;
+}
+
+// Conserva puntos, vidas y explosiones en curso; solo cambia los bloques y pega la pelota.
+function loadLevel(index) {
+  const ball = state.ball;
+  state.level = index;
+  initBlocks();
+  state.phase = 'ready';
+  ball.attached = true;
+  ball.vx = 0;
+  ball.vy = 0;
+  attachBall();
 }
 
 function endGame(phase, message) {
@@ -160,8 +173,10 @@ function updateBall(dt) {
   bouncePaddle();
   bounceBlocks();
 
-  if (!state.blocks.some((b) => b.alive)) endGame('won', '¡Victoria!');
-  else if (ball.y > CANVAS_H) loseLife();
+  if (!state.blocks.some((b) => b.alive)) {
+    if (state.level < LEVELS.length - 1) loadLevel(state.level + 1);
+    else endGame('won', '¡Victoria!');
+  } else if (ball.y > CANVAS_H) loseLife();
 }
 
 function loseLife() {
